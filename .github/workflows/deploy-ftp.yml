@@ -1,0 +1,39 @@
+# ชื่อของ Workflow ที่จะแสดงในแท็บ Actions
+name: Deploy to FTP
+
+# กำหนด Event ที่จะให้ Workflow นี้ทำงาน
+on:
+  push:
+    branches:
+      - main  # ให้ทำงานเฉพาะเมื่อมีการ push ไปที่ branch 'main' เท่านั้น
+              # หากใช้ branch 'master' ให้เปลี่ยนเป็น - master
+
+# กำหนด Job ที่จะให้ทำงาน
+jobs:
+  deploy:
+    # กำหนด OS ที่จะใช้รัน Job นี้ (แนะนำ ubuntu-latest)
+    runs-on: ubuntu-latest
+    
+    # ขั้นตอนการทำงานของ Job
+    steps:
+      # 1. Checkout โค้ดจาก Repository ของเรามาไว้ใน Runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. ใช้ Action สำเร็จรูปในการอัปโหลดไฟล์ไปที่ FTP
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          # ที่อยู่ FTP Server (ดึงจาก Secrets ที่เราตั้งไว้)
+          server: ${{ secrets.FTP_SERVER }}
+          
+          # Username ของ FTP (ดึงจาก Secrets)
+          username: ${{ secrets.FTP_USERNAME }}
+          
+          # Password ของ FTP (ดึงจาก Secrets)
+          password: ${{ secrets.FTP_PASSWORD }}
+          
+          # (Optional) โฟลเดอร์ปลายทางบน FTP Server
+          # เช่น /public_html/my-project/
+          # ถ้าไม่ใส่ จะอัปโหลดไปที่ root directory
+          server-dir: /domains/qr.now-tify.com/public_html/
