@@ -32,6 +32,7 @@ jobs:
           
           # Password ของ FTP (ดึงจาก Secrets)
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 2121 # <-- เพิ่มบรรทัดนี้เข้ามาเพื่อระบุ Port
           
           # (Optional) โฟลเดอร์ปลายทางบน FTP Server
           # เช่น /public_html/my-project/
